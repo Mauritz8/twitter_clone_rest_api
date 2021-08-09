@@ -9,12 +9,14 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>twitter-clone</artifactId>
+	<artifactId>twitter-clone-rest-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>twitter-clone</name>
-	<description>Twitter clone</description>
+	<name>twitter-clone-rest-api</name>
+	<description>Twitter clone rest api</description>
 	<properties>
-		<java.version>16</java.version>
+		<java.version>8</java.version>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>

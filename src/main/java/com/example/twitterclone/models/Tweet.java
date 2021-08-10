@@ -1,23 +1,41 @@
 package com.example.twitterclone.models;
 
+import com.example.twitterclone.View;
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
 @Table(name = "tweets")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Tweet {
 
     @Id
     @GeneratedValue
+    @JsonView(View.AlwaysShowThis.class)
     private Long id;
 
+    @JsonView(View.AlwaysShowThis.class)
     private String content;
-    private Date timeTweeted = new Date();
+
+    @JsonView(View.AlwaysShowThis.class)
+    private String timeTweeted = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+
+    @JsonView(View.AlwaysShowThis.class)
     private Integer amountOfRetweets = 0;
+
+    @JsonView(View.AlwaysShowThis.class)
     private Integer amountOfLikes = 0;
+
+    @JsonView(View.AlwaysShowThis.class)
     private Integer amountOfComments = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(View.ShowTweetStuff.class)
     private User user;
 
     public Tweet() {
@@ -43,11 +61,11 @@ public class Tweet {
         this.content = content;
     }
 
-    public Date getTimeTweeted() {
+    public String getTimeTweeted() {
         return timeTweeted;
     }
 
-    public void setTimeTweeted(Date timeTweeted) {
+    public void setTimeTweeted(String timeTweeted) {
         this.timeTweeted = timeTweeted;
     }
 
@@ -73,6 +91,10 @@ public class Tweet {
 
     public void setAmountOfComments(Integer amountOfComments) {
         this.amountOfComments = amountOfComments;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setUser(User user) {

@@ -1,6 +1,9 @@
 package com.example.twitterclone.services;
 
-import com.example.twitterclone.exceptions.userNotFound.UserNotFoundException;
+import com.example.twitterclone.exceptions.userWithIdNotFound.UserWithIdNotFoundException;
+import com.example.twitterclone.exceptions.userWithUsernameNotFound.UserWithUsernameNotFoundException;
+import com.example.twitterclone.exceptions.usernameAlreadyExists.UsernameAlreadyExistsException;
+import com.example.twitterclone.exceptions.wrongPasswordForUsername.WrongPasswordForUsernameException;
 import com.example.twitterclone.models.Tweet;
 import com.example.twitterclone.models.User;
 import com.example.twitterclone.repositories.TweetRepository;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -24,15 +28,17 @@ public class UserService {
     }
 
     public User getUser(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+        try {
+            return userRepository.findById(userId).get();
+        } catch (NoSuchElementException e) {
+            throw new UserWithIdNotFoundException(userId);
+        }
     }
 
     public User createUser(User user) {
-        boolean usernameExists = userRepository.findByUsername(user.getUsername()).size() != 0;
+        boolean usernameExists = usernameExists(user.getUsername());
         if (usernameExists) {
-            System.out.println("Username already exists");
-            return null;
+            throw new UsernameAlreadyExistsException(user.getUsername());
         } else {
             userRepository.save(user);
             return user;
@@ -50,4 +56,33 @@ public class UserService {
         return tweetRepository.findByUser_id(userId);
     }
 
+    public boolean usernameExists(String username) {
+        return userRepository.findByUsername(username).size() != 0;
+    }
+
+    public List<User> getUsersWithUsername(String username) {
+        if (usernameExists(username)) {
+            return userRepository.findByUsername(username);
+        }
+        throw new UserWithUsernameNotFoundException(username);
+
+    }
+
+    public boolean correctPasswordForUsername(String username, String password) {
+        String correctPassword = userRepository.findPasswordForUserWithUsername(username);
+        if (password.equals(correctPassword)) {
+            return true;
+        }
+        return false;
+    }
+
+    public String login(String username, String password) {
+        if (!usernameExists(username)) {
+            throw new UserWithUsernameNotFoundException(username);
+        }
+        if (correctPasswordForUsername(username, password)) {
+            return "";
+        }
+        throw new WrongPasswordForUsernameException(username);
+    }
 }

@@ -20,8 +20,12 @@ public class UserController {
 
     @GetMapping("")
     @JsonView(View.ShowUserStuff.class)
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public List<User> getUsers(@RequestParam(required = false) String username) {
+        if (username == null || username.equals("")) {
+            return userService.getUsers();
+        } else {
+            return userService.getUsersWithUsername(username);
+        }
     }
 
     @GetMapping("{userId}")
@@ -47,5 +51,11 @@ public class UserController {
     @JsonView(View.ShowUserStuff.class)
     public Tweet createTweet(@PathVariable Long userId, @RequestParam String tweetContent) {
         return userService.createTweet(userId, tweetContent);
+    }
+
+    @PostMapping("login")
+    @JsonView(View.ShowUserStuff.class)
+    public String login(@RequestBody User user) {
+        return userService.login(user.getUsername(), user.getPassword());
     }
 }

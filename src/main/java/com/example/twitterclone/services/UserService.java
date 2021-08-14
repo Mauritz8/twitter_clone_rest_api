@@ -53,7 +53,7 @@ public class UserService {
     }
 
     public List<Tweet> getTweetsFromUser(Long userId) {
-        return tweetRepository.findByUser_id(userId);
+        return tweetRepository.findByUserId(userId);
     }
 
     public boolean usernameExists(String username) {
@@ -76,12 +76,12 @@ public class UserService {
         return false;
     }
 
-    public String login(String username, String password) {
+    public User login(String username, String password) {
         if (!usernameExists(username)) {
             throw new UserWithUsernameNotFoundException(username);
         }
         if (correctPasswordForUsername(username, password)) {
-            return "";
+            return getUsersWithUsername(username).get(0);
         }
         throw new WrongPasswordForUsernameException(username);
     }

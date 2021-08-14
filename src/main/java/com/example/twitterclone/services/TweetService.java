@@ -14,7 +14,7 @@ public class TweetService {
     TweetRepository tweetRepository;
 
     public List<Tweet> getTweets() {
-        return tweetRepository.findAll();
+        return tweetRepository.findAllByOrderByTimeTweetedDesc();
     }
 
     public Tweet getTweet(Long tweetId) {

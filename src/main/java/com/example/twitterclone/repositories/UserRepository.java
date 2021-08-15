@@ -12,4 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT password FROM users WHERE username=?1 limit 1", nativeQuery = true)
     String findPasswordForUserWithUsername(String username);
+
+    @Query(value = "FROM User WHERE username LIKE %?1% OR displayName LIKE %?1%")
+    List<User> findByUsernameOrDisplayNameContaining(String searchPattern);
 }

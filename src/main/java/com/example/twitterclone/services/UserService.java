@@ -85,4 +85,8 @@ public class UserService {
         }
         throw new WrongPasswordForUsernameException(username);
     }
+
+    public List<User> searchUsers(String searchPattern) {
+        return userRepository.findByUsernameOrDisplayNameContaining(searchPattern);
+    }
 }

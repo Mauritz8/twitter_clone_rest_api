@@ -58,4 +58,10 @@ public class UserController {
     public User login(@RequestBody User user) {
         return userService.login(user.getUsername(), user.getPassword());
     }
+
+    @GetMapping("search")
+    @JsonView(View.ShowUserStuff.class)
+    public List<User> searchUsers(String searchPattern) {
+        return userService.searchUsers(searchPattern);
+    }
 }

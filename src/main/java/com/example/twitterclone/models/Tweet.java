@@ -1,7 +1,6 @@
 package com.example.twitterclone.models;
 
-import com.example.twitterclone.View;
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
@@ -9,33 +8,24 @@ import java.util.Date;
 
 @Entity
 @Table(name = "tweets")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Tweet {
 
     @Id
     @GeneratedValue
-    @JsonView(View.AlwaysShowThis.class)
     private Long id;
 
-    @JsonView(View.AlwaysShowThis.class)
     private String content;
 
-    @JsonView(View.AlwaysShowThis.class)
     private String timeTweeted = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
 
-    @JsonView(View.AlwaysShowThis.class)
     private Integer amountOfRetweets = 0;
 
-    @JsonView(View.AlwaysShowThis.class)
     private Integer amountOfLikes = 0;
 
-    @JsonView(View.AlwaysShowThis.class)
     private Integer amountOfComments = 0;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonView(View.ShowTweetStuff.class)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("tweets")
     private User user;
 
     public Tweet() {

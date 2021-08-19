@@ -1,38 +1,28 @@
 package com.example.twitterclone.models;
 
-import com.example.twitterclone.View;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.None.class)
 public class User {
 
     @Id
     @GeneratedValue
-    @JsonView(View.AlwaysShowThis.class)
     private Long id;
 
-    @JsonView(View.AlwaysShowThis.class)
     private String username;
 
-    @JsonView(View.AlwaysShowThis.class)
     private String displayName;
 
-    @JsonView(View.AlwaysShowThis.class)
     private String password;
 
-    @JsonView(View.AlwaysShowThis.class)
     private String profilePic = "https://hips.hearstapps.com/digitalspyuk.cdnds.net/17/13/1490989105-twitter1.jpg?resize=45:*";
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
-    @JsonView(View.ShowUserStuff.class)
+    @JsonIgnoreProperties("user")
     private List<Tweet> tweets;
 
     public User() {
